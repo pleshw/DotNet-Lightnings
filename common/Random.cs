@@ -21,7 +21,6 @@ namespace Common
         scale = BitConverter.ToUInt32(bytes, 0);
       }
 
-      // Add min to the scaled difference between max and min.
       return (int)(min + (max - min) *
           (scale / (double)uint.MaxValue));
     }
