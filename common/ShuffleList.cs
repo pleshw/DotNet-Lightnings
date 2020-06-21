@@ -1,18 +1,21 @@
 using System;
 using System.Collections.Generic;
-public static class ShuffleList
+namespace Common
 {
-  public static void Shuffle<T>(this IList<T> list)
+  public static class ShuffleList
   {
-    Random rng = new Random(); //DevSkim: ignore DS148264 
-    int n = list.Count;
-    while (n > 1)
+    public static void Shuffle<T>(this IList<T> list)
     {
-      n--;
-      int k = rng.Next(n + 1);
-      T value = list[k];
-      list[k] = list[n];
-      list[n] = value;
+      var rng = new Random(); //DevSkim: ignore DS148264 
+      int n = list.Count;
+      while (n > 1)
+      {
+        n--;
+        int k = rng.Next(n + 1);
+        T value = list[k];
+        list[k] = list[n];
+        list[n] = value;
+      }
     }
   }
 }
