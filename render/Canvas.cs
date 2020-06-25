@@ -16,6 +16,8 @@ namespace PleshwGraphics
 
     private PixelFormat _pixelFormat;
 
+    public int Thickness = 1;
+
     public Canvas(int w, int h, PixelFormat p)
       => (Width, Height, _pixelFormat, _bitmap) = (w, h, p, new Bitmap(w, h, p));
     public Canvas(int w, int h) : this(w, h, PixelFormat.Format32bppPArgb)
@@ -44,8 +46,9 @@ namespace PleshwGraphics
     public void VerticalLine(int x, int y, int size) => VerticalLine(x, y, size, DefaultPaintColor);
     public void VerticalLine(int x, int y, int size, Color c)
     {
-      for (int i = 0; i <= size; i++)
-        Pixel(x, y + i, c);
+      for (int thick = 0; thick < Thickness; thick++)
+        for (int i = 0; i <= size; i++)
+          Pixel(x + thick, y + i, c);
     }
 
     public void HorizontalLine(Point p, int size) => HorizontalLine(p, size, DefaultPaintColor);
@@ -53,27 +56,28 @@ namespace PleshwGraphics
     public void HorizontalLine(int x, int y, int size) => HorizontalLine(x, y, size, DefaultPaintColor);
     public void HorizontalLine(int x, int y, int size, Color c)
     {
-      for (int i = 0; i <= size; i++)
-        Pixel(x + i, y, c);
+      for (int thick = 0; thick < Thickness; thick++)
+        for (int i = 0; i <= size; i++)
+          Pixel(x + i, y + thick, c);
     }
 
 
-    public void HorizontalParallel(Point p, int size, int distance) => HorizontalParallel(p, size, distance, DefaultPaintColor);
-    public void HorizontalParallel(Point p, int size, int distance, Color c) => HorizontalParallel(p.X, p.Y, size, distance, c);
-    public void HorizontalParallel(int x, int y, int size, int distance) => HorizontalParallel(x, y, size, distance, DefaultPaintColor);
-    public void HorizontalParallel(int x, int y, int size, int distance, Color c)
+    public void HorizontalParallel(Point p, int length, int distance) => HorizontalParallel(p, length, distance, DefaultPaintColor);
+    public void HorizontalParallel(Point p, int length, int distance, Color c) => HorizontalParallel(p.X, p.Y, length, distance, c);
+    public void HorizontalParallel(int x, int y, int length, int distance) => HorizontalParallel(x, y, length, distance, DefaultPaintColor);
+    public void HorizontalParallel(int x, int y, int length, int distance, Color c)
     {
-      HorizontalLine(x, y, size, c);
-      HorizontalLine(x, y + distance, size, c);
+      HorizontalLine(x, y, length, c);
+      HorizontalLine(x, y + distance, length, c);
     }
 
-    public void VerticalParallel(Point p, int size, int distance) => VerticalParallel(p, size, distance, DefaultPaintColor);
-    public void VerticalParallel(Point p, int size, int distance, Color c) => VerticalParallel(p.X, p.Y, size, distance, c);
-    public void VerticalParallel(int x, int y, int size, int distance) => VerticalParallel(x, y, size, distance, DefaultPaintColor);
-    public void VerticalParallel(int x, int y, int size, int distance, Color c)
+    public void VerticalParallel(Point p, int length, int distance) => VerticalParallel(p, length, distance, DefaultPaintColor);
+    public void VerticalParallel(Point p, int length, int distance, Color c) => VerticalParallel(p.X, p.Y, length, distance, c);
+    public void VerticalParallel(int x, int y, int length, int distance) => VerticalParallel(x, y, length, distance, DefaultPaintColor);
+    public void VerticalParallel(int x, int y, int length, int distance, Color c)
     {
-      VerticalLine(x, y, size, c);
-      VerticalLine(x + distance, y, size, c);
+      VerticalLine(x, y, length, c);
+      VerticalLine(x + distance, y, length, c);
     }
 
     public void Rectangle(Point p, int w, int h) => Rectangle(p, w, h, DefaultPaintColor);
@@ -81,8 +85,9 @@ namespace PleshwGraphics
     public void Rectangle(int x, int y, int w, int h) => Rectangle(x, y, w, h, DefaultPaintColor);
     public void Rectangle(int x, int y, int width, int height, Color c)
     {
-      HorizontalParallel(x + 1, y, width - 1, height, c);
-      VerticalParallel(x, y, height, width, c);
+      int offset = Thickness - 1;
+      HorizontalParallel(x + Thickness, y, width - Thickness, height - offset, c);
+      VerticalParallel(x, y, height, width - offset, c);
     }
 
     public void Square(Point p, int size) => Rectangle(p, size, size);
