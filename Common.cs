@@ -1,15 +1,16 @@
 using System;
 
+
 namespace Common
 {
   /// Representa os possíveis estados de uma célula
   public enum CellState
   {
     None = 0, //!< No walls
-    Top = 1, //!< Top wall active.
-    Right = 2, //!< Right wall active.
-    Bottom = 4, //!< Bottom wall active.
-    Left = 8, //!< Left wall active.
+    Top = 1, //!< Top wall open.
+    Right = 2, //!< Right wall open.
+    Bottom = 4, //!< Bottom wall open.
+    Left = 8, //!< Left wall open.
     NotTested = 16, //!< Not tested by the solver.
     Checking = 32, //!< Being checked by the solver.
     Visited = 64, //!< Visited by the solver.
@@ -35,7 +36,7 @@ namespace Common
 
 
 
-  /// Enumerador que representa uma célula. Cada flag significa que seu respectivo muro está ativo
+  /// Enumerador que representa uma célula. Cada flag significa que seu respectivo 'wall' está aberto
   [Flags]
   public enum cell_t : byte
   {
@@ -53,7 +54,8 @@ namespace Common
   /// Instancias de celulas padrão
   public struct DefaultCell
   {
-    public static cell_t GetOpen() => cell_t.None;
-    public static cell_t GetClosed() => cell_t.Top | cell_t.Right | cell_t.Bottom | cell_t.Left;
+    public static cell_t GetOpen() => cell_t.Top | cell_t.Right | cell_t.Bottom | cell_t.Left;
+
+    public static cell_t GetClosed() => cell_t.None;
   }
 }
