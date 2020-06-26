@@ -10,13 +10,15 @@ namespace PleshwGraphics
     public readonly int Width;
     public readonly int Height;
 
-    public Color CurrentColor = Color.Transparent;
+    public Color BorderColor = Color.Transparent;
+    public Color FillColor = Color.Transparent;
+    public Color MainColor = Color.Black;
 
     private Bitmap _bitmap;
 
     private PixelFormat _pixelFormat;
 
-    public int Thickness = 1;
+    public int BorderWidth = 1;
 
     public Canvas(int w, int h, PixelFormat p)
       => (Width, Height, _pixelFormat, _bitmap) = (w, h, p, new Bitmap(w, h, p));
@@ -32,7 +34,7 @@ namespace PleshwGraphics
     public void Pixel(int x, int y, Color color) => _bitmap.SetPixel(x, y, color);
     public void Pixel(Point p, Color color) => Pixel(p.X, p.Y, color);
 
-    public void Clear() => Clear(CurrentColor);
+    public void Clear() => Clear(MainColor);
     public void Clear(Color c)
     {
       for (int y = 0; y < Height; y++)
@@ -41,59 +43,73 @@ namespace PleshwGraphics
     }
 
 
-    public void VerticalLine(Point p, int size) => VerticalLine(p, size, CurrentColor);
-    public void VerticalLine(Point p, int size, Color c) => VerticalLine(p.X, p.Y, size, c);
-    public void VerticalLine(int x, int y, int size) => VerticalLine(x, y, size, CurrentColor);
-    public void VerticalLine(int x, int y, int size, Color c)
+    public void VerticalLine(Point p, int length) => VerticalLine(p, length, MainColor);
+    public void VerticalLine(Point p, int length, Color c) => VerticalLine(p.X, p.Y, length, c);
+    public void VerticalLine(int x, int y, int length) => VerticalLine(x, y, length, MainColor);
+    public void VerticalLine(int x, int y, int length, Color c)
     {
-      for (int thick = 0; thick < Thickness; thick++)
-        for (int i = 0; i <= size; i++)
-          Pixel(x + thick, y + i, c);
-    }
-
-    public void HorizontalLine(Point p, int size) => HorizontalLine(p, size, CurrentColor);
-    public void HorizontalLine(Point p, int size, Color c) => HorizontalLine(p.X, p.Y, size, c);
-    public void HorizontalLine(int x, int y, int size) => HorizontalLine(x, y, size, CurrentColor);
-    public void HorizontalLine(int x, int y, int size, Color c)
-    {
-      for (int thick = 0; thick < Thickness; thick++)
-        for (int i = 0; i <= size; i++)
-          Pixel(x + i, y + thick, c);
+      for (int i = 0; i < length; i++)
+        Pixel(x, y + i, c);
     }
 
 
-    public void HorizontalParallel(Point p, int length, int distance) => HorizontalParallel(p, length, distance, CurrentColor);
-    public void HorizontalParallel(Point p, int length, int distance, Color c) => HorizontalParallel(p.X, p.Y, length, distance, c);
-    public void HorizontalParallel(int x, int y, int length, int distance) => HorizontalParallel(x, y, length, distance, CurrentColor);
-    public void HorizontalParallel(int x, int y, int length, int distance, Color c)
+    public void HorizontalLine(Point p, int length) => HorizontalLine(p.X, p.Y, length, MainColor);
+    public void HorizontalLine(Point p, int length, Color c) => HorizontalLine(p.X, p.Y, length, c);
+    public void HorizontalLine(int x, int y, int length) => HorizontalLine(x, y, length, MainColor);
+    public void HorizontalLine(int x, int y, int length, Color c)
+    {
+      for (int i = 0; i < length; i++)
+        Pixel(x + i, y, c);
+    }
+
+
+    public void HorizontalParallel(Point p, int length, int offset) => HorizontalParallel(p, length, offset, MainColor);
+    public void HorizontalParallel(Point p, int length, int offset, Color c) => HorizontalParallel(p.X, p.Y, length, offset, c);
+    public void HorizontalParallel(int x, int y, int length, int offset) => HorizontalParallel(x, y, length, offset, MainColor);
+    public void HorizontalParallel(int x, int y, int length, int offset, Color c)
     {
       HorizontalLine(x, y, length, c);
-      HorizontalLine(x, y + distance, length, c);
+      HorizontalLine(x, y + (offset + 1), length, c);
     }
 
-    public void VerticalParallel(Point p, int length, int distance) => VerticalParallel(p, length, distance, CurrentColor);
-    public void VerticalParallel(Point p, int length, int distance, Color c) => VerticalParallel(p.X, p.Y, length, distance, c);
-    public void VerticalParallel(int x, int y, int length, int distance) => VerticalParallel(x, y, length, distance, CurrentColor);
-    public void VerticalParallel(int x, int y, int length, int distance, Color c)
+    public void VerticalParallel(Point p, int length, int offset) => VerticalParallel(p, length, offset, BorderColor);
+    public void VerticalParallel(Point p, int length, int offset, Color c) => VerticalParallel(p.X, p.Y, length, offset, c);
+    public void VerticalParallel(int x, int y, int length, int offset) => VerticalParallel(x, y, length, offset, BorderColor);
+    public void VerticalParallel(int x, int y, int length, int offset, Color c)
     {
       VerticalLine(x, y, length, c);
-      VerticalLine(x + distance, y, length, c);
+      VerticalLine(x + (offset + 1), y, length, c);
     }
 
-    public void Rectangle(Point p, int w, int h) => Rectangle(p, w, h, CurrentColor);
-    public void Rectangle(Point p, int w, int h, Color c) => Rectangle(p.X, p.Y, w, h, c);
-    public void Rectangle(int x, int y, int w, int h) => Rectangle(x, y, w, h, CurrentColor);
-    public void Rectangle(int x, int y, int width, int height, Color c)
+    public void Rectangle(Point p, int w, int h, bool fill = false) => Rectangle(p.X, p.Y, w, h, fill);
+    public void Rectangle(int x, int y, int width, int height, bool fill = false)
     {
-      int offset = Thickness - 1;
-      HorizontalParallel(x + Thickness, y, width - Thickness, height - offset, c);
-      VerticalParallel(x, y, height, width - offset, c);
+      for (int thick = 0; thick < BorderWidth; thick++)
+        EmptyRect(x + thick, y + thick, width - (thick * 2), height - (thick * 2));
+
+      if (fill)
+      {
+        int margin = BorderWidth * 2;
+        FillRect(x + BorderWidth, y + BorderWidth, (width - margin), (height - margin));
+      }
     }
 
-    public void Square(Point p, int size) => Rectangle(p, size, size);
-    public void Square(Point p, int size, Color c) => Rectangle(p, size, size, c);
-    public void Square(int x, int y, int size) => Rectangle(x, y, size, size);
-    public void Square(int x, int y, int size, Color c) => Rectangle(x, y, size, size, c);
+    public void FillRect(Point p, int w, int h) => FillRect(p.X, p.Y, w, h);
+    public void FillRect(int x, int y, int w, int h)
+    {
+      for (int i = 0; i < h; i++)
+        HorizontalLine(x, y + i, w, FillColor);
+    }
+
+    public void EmptyRect(Point p, int w, int h) => EmptyRect(p.X, p.Y, w, h);
+    public void EmptyRect(int x, int y, int w, int h)
+    {
+      VerticalParallel(x, y, h, w - 2, BorderColor);
+      HorizontalParallel(x + 1, y, (w - 2), (h - 2), BorderColor);
+    }
+
+    public void Square(Point p, int size, bool fill = false) => Square(p.X, p.Y, size, fill);
+    public void Square(int x, int y, int size, bool fill = false) => Rectangle(x, y, size, size, fill);
 
     public void SavePNG(string src)
     {

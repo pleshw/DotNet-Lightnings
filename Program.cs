@@ -8,29 +8,34 @@ namespace maze
   {
     static void Main()
     {
-      Maze maze = Maze.Build(3, 3, BuildingMethod.Kruskal);
-      for (int i = 0; i < maze.Width * maze.Height; i++)
-      {
-        Console.WriteLine($"{i} Open at  {maze.Cell(i)}");
-      }
+      // Maze maze = Maze.Build(3, 3, BuildingMethod.Kruskal);
+      // for (int i = 0; i < maze.Width * maze.Height; i++)
+      // {
+      //   Console.WriteLine($"{i} Open at  {maze.Cell(i)}");
+      // }
 
       Canvas canvas = new Canvas(17, 17);
+
+
+      canvas.MainColor = Color.Black;
       canvas.Clear();
 
+      canvas.BorderWidth = 1;
 
-      canvas.Thickness = 1;
-
-      canvas.CurrentColor = Color.Black;
+      canvas.MainColor = Color.Black;
+      canvas.BorderColor = Color.White;
+      canvas.FillColor = Color.DarkBlue;
 
       canvas.VerticalParallel(0, 0, 3, 4);
-      canvas.HorizontalParallel(0, 5, 3, 4);
+      // canvas.HorizontalParallel(0, 5, 3, 4);
 
-      canvas.Square(8, 0, 5);
+      canvas.EmptyRect(8, 0, 5, 5);
+
+      canvas.FillRect(0, 7, 5, 5);
 
 
-      canvas.Thickness = 2;
-      canvas.Square(8, 7, 5);
-
+      canvas.BorderWidth = 2;
+      canvas.Square(8, 7, 7, fill: true);
 
       canvas.Pixel(16, 0, Color.Red);
       canvas.Pixel(16, 2, Color.Red);
